@@ -1,4 +1,11 @@
-# AI20K Agent Template
+# X-Tutor
+
+Trợ lý học tập AI giúp sinh viên lập kế hoạch, theo dõi tiến độ và điều chỉnh
+cách học theo chu trình **Plan–Do–Reflect**.
+
+**Mã đề:** EDU-01 | **Đội:** P-008
+
+## Nền tảng dự án
 
 Template chính thức cho học viên VinUni AI20K Build Phase: cấu trúc dự án, code
 mẫu và hướng dẫn kỹ thuật để xây dựng một AI Agent hoàn chỉnh — từ kiến trúc,
