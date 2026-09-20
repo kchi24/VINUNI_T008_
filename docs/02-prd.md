@@ -174,7 +174,7 @@ flowchart TD
   - Truy vấn hỏi đáp RAG (Streaming SSE): Time-to-First-Token (TTFT) $< 800ms$, thời gian hoàn thành $< 2.5s$.
   - Tác vụ lập kế hoạch và phản tư: $< 4.0s$.
 - **Tối ưu chi phí Token:**
-  - Định tuyến thông minh (Model Routing): Tác vụ phân rã thường dùng mô hình nhẹ (`gpt-4o-mini`), chỉ tác vụ phân tích phản tư sâu mới gọi `gpt-4o`.
+  - Định tuyến thông minh (Model Routing): Tác vụ phân rã thường dùng mô hình nhẹ , chỉ tác vụ phân tích phản tư sâu mới gọi `gpt-4o`.
   - Redis Semantic Caching cho các câu hỏi phổ biến liên quan đến quy chế môn học, syllabus.
 
 ### 5.2 Bảo mật & Liêm chính dữ liệu
