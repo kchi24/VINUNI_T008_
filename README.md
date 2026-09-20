@@ -159,10 +159,10 @@ nộp danh sách chính thức.
 
 | Thành viên | Vai trò | Trách nhiệm chính |
 |---|---|---|
-| P-008-01 | **Tech Lead** | Kiến trúc, backend, code review, CI/CD và tích hợp các module |
-| P-008-02 | **AI Engineer** | LangGraph, RAG, prompt/guardrail và evaluation |
-| P-008-03 | **Product Owner (PO)** | Tầm nhìn sản phẩm, ưu tiên backlog, phạm vi MVP và nghiệm thu |
-| P-008-04 | **Business Analyst (BA)** | Nghiên cứu pain point, user stories, PRD, UI flow và tiêu chí chấp nhận |
+| Phạm Khắc Tú | **Tech Lead** | Kiến trúc, backend, code review, tích hợp các module và hoàn thiện hệ thống |
+| Nguyễn Gia Khánh | **AI Engineer** | LangGraph, RAG, prompt/guardrail và evaluation |
+| Đặng Thế Anh | **Product Owner (PO)** | Tầm nhìn sản phẩm, ưu tiên backlog, phạm vi MVP và nghiệm thu |
+| Thân Thị Kim Chi | **Business Analyst (BA)** | Nghiên cứu pain point, user stories, PRD, UI flow và tiêu chí chấp nhận |
 
 ## Quy trình nhánh
 
