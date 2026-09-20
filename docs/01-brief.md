@@ -73,7 +73,7 @@ Dự án **Study Companion (X-Tutor)** được thiết kế như một **Hệ t
    AI không cung cấp bài làm hoàn chỉnh. Thay vào đó, AI hỏi: “Em đang muốn tìm xu hướng nào trong dữ liệu? Hãy thử xác định biến mục tiêu và nhóm biến giải thích trước.”
 3. **Module 3 - REFLECT (Kích hoạt Siêu nhận thức & Hỗ trợ Giảng viên can thiệp sớm):**
    - AI khởi động phiên phản tư ngắn (3–5 phút) vào cuối tuần hoặc sau mỗi bài nộp, giúp sinh viên nhìn lại tiến độ, khó khăn và nguyên nhân. LLM-as-a-Judge được sử dụng để đánh giá mức độ đầy đủ và chiều sâu của phản tư. Kết quả được lưu vào Learning Memory để AI điều chỉnh kế hoạch và cách hỗ trợ cho giai đoạn học tiếp theo.
-   - Tổng hợp dữ liệu học tập thành **Bản đồ nhiệt khó khăn (Concept Confusion Heatmap)** và **Cảnh báo nguy cơ trễ hạn (At-risk Alerts)** ẩn danh theo chuẩn FERPA, giúp giảng viên nắm bắt "nhịp thở" của lớp học giữa chặng.
+   - Tổng hợp dữ liệu học tập thành **Bản đồ nhiệt khó khăn (Concept Confusion Heatmap)** và **Cảnh báo nguy cơ trễ hạn (At-risk Alerts)** ẩn danh theo chuẩn FERPA, giúp giảng viên nắm bắt "nhịp thở" của lớp học giữa chặng
 
    **VD:** Sau khi nộp Assignment, AI mở một phiên phản tư khoảng 3–5 phút:
    AI: “Phần nào của bài khiến em gặp khó khăn nhất?”
