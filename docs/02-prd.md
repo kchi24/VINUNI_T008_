@@ -7,7 +7,7 @@
 ## 1. Tổng quan sản phẩm (Product Overview)
 
 ### 1.1 Tầm nhìn (Vision)
-Xây dựng một "AI Learning Companion" thông minh, thấu hiểu và cá nhân hóa cho từng sinh viên đại học. Hệ thống không chỉ là một công cụ quản lý công việc (To-do list) hay một chatbot hỏi đáp rời rạc, mà là một hệ thống tác nhân đa trí tuệ (Multi-Agent System) khép kín theo chu trình siêu nhận thức: **Lập kế hoạch (Plan) -> Hành động có định hướng (Do) -> Phản tư cải tiến (Reflect)**.
+Xây dựng một "AI Learning Companion" thông minh, thấu hiểu và cá nhân hóa cho từng sinh viên đại học. Hệ thống không chỉ là một công cụ quản lý công việc (To-do list) hay một chatbot hỏi đáp rời rạc, mà là một hệ thống tác nhân đa trí tuệ (Multi-Agent System) khép kín theo chu trình siêu nhận thức: **Lập kế hoạch (Plan) -> Hành động có định hướng (Do) -> Phản tư cải tiến (Reflect)**
 
 ### 1.2 Bối cảnh, Thực trạng & Lập luận Căn nguyên (Context & Root-Cause Analysis)
 Tại các trường đại học đào tạo theo chuẩn quốc tế (như VinUni), sinh viên học theo tín chỉ và mô hình **Học tập chủ động (Active Learning / PBL)**, trong đó **>65% thời lượng học tập là tự học ngoài giảng đường**. Mọi học liệu và bài tập đều vận hành qua **Canvas LMS**. Tuy nhiên, quá trình tự học thực tế bộc lộ 5 nghịch lý mang tính căn nguyên:
