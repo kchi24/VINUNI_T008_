@@ -1,201 +1,175 @@
 # X-Tutor
 
-Trợ lý học tập AI giúp sinh viên lập kế hoạch, theo dõi tiến độ và điều chỉnh
-cách học theo chu trình **Plan–Do–Reflect**.
+> Trợ lý học tập AI giúp sinh viên biến yêu cầu của nhiều môn thành kế hoạch
+> tuần khả thi, nhận hỗ trợ có nguồn khi mắc kẹt và điều chỉnh cách học theo
+> chu trình **Plan–Do–Reflect**.
 
-**Mã đề:** EDU-01 | **Đội:** P-008
+**Mã đề:** EDU-01 | **Đội:** P-008 | **Trạng thái:** Gate 01 / MVP Design
 
-## Nền tảng dự án
+## Bài toán
 
-Template chính thức cho học viên VinUni AI20K Build Phase: cấu trúc dự án, code
-mẫu và hướng dẫn kỹ thuật để xây dựng một AI Agent hoàn chỉnh — từ kiến trúc,
-code, test cho đến deploy và nộp bài Demo Day.
+Sinh viên đại học phải theo dõi nhiều môn và deadline cùng lúc nhưng thường khó
+biết nên bắt đầu từ đâu, chia bài tập lớn như thế nào và ưu tiên công việc nào
+trong tuần. Canvas, lịch cá nhân, ghi chú và chatbot hiện tồn tại rời rạc, khiến
+sinh viên dễ bắt đầu muộn, chạy theo deadline và lặp lại cách học chưa hiệu quả.
 
-Technical Guidebook: <https://phoenix.note.transformerlabs.ai/technical-book>
+Giảng viên thường chỉ nhận ra vấn đề sau khi sinh viên đã nộp muộn hoặc kết quả
+giảm, nên thiếu cơ hội hỗ trợ sớm.
 
-## Template có sẵn những gì
+## Giải pháp
 
-- **Cấu trúc thư mục tách lớp** — `agents/`, `api/`, `services/`, `models/` đã
-  chia sẵn, không phải bàn lại từ đầu.
-- **Code mẫu chạy được** — LangGraph agent (state, node, tool), FastAPI routes,
-  Pydantic settings, schema.
-- **Docker và CI** — Dockerfile multi-stage, `docker-compose.yml`, workflow
-  GitHub Actions chạy `ruff` + `pytest` khi push lên `main`/`develop` và khi mở
-  pull request vào `main`.
-- **Technical Guidebook 10 chương** trong `docs/guide/`, đồng thời đọc được
-  online.
-- **Checklist 10 deliverables** của Demo Day.
-- **AI usage logging** — hook cài sẵn cho 6 công cụ AI, log tự động gửi lên
-  grading server mỗi lần `git push`.
+X-Tutor tạo một vòng lặp học tập khép kín:
 
-## Yêu cầu
+- **Plan:** Đọc assignment, rubric và deadline để đề xuất kế hoạch tuần gồm các
+  nhiệm vụ nhỏ; sinh viên xem lại và xác nhận trước khi lưu.
+- **Do:** Theo dõi tiến độ và hỏi đáp trên tài liệu môn học có trích nguồn.
+  Guardrail chặn yêu cầu làm hộ và chuyển sang gợi ý kiểu Socratic.
+- **Reflect:** So sánh kế hoạch với kết quả thực tế, xác định nguyên nhân chậm
+  tiến độ và đề xuất điều chỉnh cho tuần sau.
+- **Instructor view:** Hiển thị tiến độ và tín hiệu nguy cơ ở dạng tổng hợp/ẩn
+  danh; giảng viên quyết định có can thiệp hay không.
 
-- Python 3.11 (phiên bản CI đang dùng)
-- Git
-- Docker — tuỳ chọn, chỉ cần nếu chạy `docker compose`
+## Người dùng mục tiêu
 
-## Bắt đầu
+- **Sinh viên:** cần biết việc tiếp theo nên làm và được hỗ trợ đúng lúc; đo bằng
+  tỷ lệ hoàn thành kế hoạch và nộp bài đúng hạn.
+- **Giảng viên/Cố vấn:** cần tín hiệu sớm về tiến độ và khó khăn chung của lớp;
+  đo bằng số trường hợp nguy cơ được phát hiện trước deadline.
 
-### 1. Clone repo của đội
+## Phạm vi MVP
 
-Khi đội được chốt, hệ thống tự sinh repo cho đội từ template này, nằm trong org
-GitHub của khoá bạn đang học và đặt tên theo mã đội. Copy URL ở trang đội trên
-Phoenix rồi clone về:
+- Hai vai trò: sinh viên và giảng viên/cố vấn.
+- Lập kế hoạch cho nhiều môn từ dữ liệu Canvas mô phỏng.
+- Hỏi đáp có nguồn được pilot trên 1–2 môn đại diện.
+- Guardrail chống làm hộ nằm trong luồng xử lý của code.
+- Phiên Reflect cuối tuần và bản nháp re-plan cần sinh viên xác nhận.
+- Dashboard giảng viên dùng dữ liệu tổng hợp/ẩn danh.
 
-```bash
-git clone https://github.com/<ORG-CỦA-KHOÁ>/<MÃ-ĐỘI>.git
-cd <MÃ-ĐỘI>
-```
-
-Không cần `rm -rf .git`, `git init` hay `git remote add`: repo sinh từ template
-đã bắt đầu bằng lịch sử riêng của đội và remote trỏ sẵn đúng chỗ. Chưa thấy repo
-của đội thì báo BTC — repo tự tạo nằm ngoài org sẽ không được chấm.
-
-### 2. Cài môi trường
-
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 3. Cấu hình biến môi trường
-
-```bash
-cp .env.example .env
-```
-
-Mở `.env` và điền `OPENAI_API_KEY`. Riêng `AI_LOG_API_KEY`, mỗi thành viên tự
-tạo key riêng tại [dashboard Phoenix](https://phoenix.note.transformerlabs.ai/api-keys)
-rồi thay vào chỗ `<get-your-api-key-from-dashboard-phoenix>` — giá trị trong
-`.env.example` chỉ là placeholder, để nguyên thì log không vào được hệ thống chấm.
-
-### 4. Cài hook ghi log AI
-
-```bash
-bash scripts/setup_hooks.sh                                      # Linux / macOS / Git Bash
-powershell -ExecutionPolicy Bypass -File scripts\setup_hooks.ps1 # Windows PowerShell
-```
-
-Chạy một lần sau khi clone. Hook ghi lại prompt khi bạn dùng Claude Code, Cursor,
-Codex CLI, Gemini CLI, Antigravity hoặc GitHub Copilot, và cài pre-push hook để
-đẩy log lên server.
-
-### 5. Chạy server
-
-```bash
-uvicorn src.main:app --reload --port 8000
-```
-
-Swagger UI ở <http://localhost:8000/docs>. Hoặc dùng `make run`, `make test`,
-`make lint` — xem `Makefile`.
-
-## Cấu trúc thư mục
-
-```
-src/
-  agents/            LangGraph agent
-    graph.py         State graph (nodes + edges)
-    state.py         State schema (TypedDict)
-    nodes/           Node functions
-    tools/           Agent tools (@tool)
-  api/routes.py      FastAPI endpoints
-  models/schemas.py  Pydantic schemas
-  services/llm.py    LLM client
-  config.py          Pydantic Settings
-  main.py            App entry point
-tests/               pytest suite
-scripts/             Hook ghi log AI + installer
-docs/
-  guide/             Technical Guidebook (nguồn của bản online)
-  architecture_diagram.md
-eval/                Kết quả evaluation
-presentation/        Slide và video Demo Day
-.claude/ .codex/ .cursor/ .gemini/ .agents/ .github/hooks/
-                     Config hook cho từng công cụ
-.github/workflows/   CI
-Dockerfile           Multi-stage build
-docker-compose.yml   Chạy backend bằng Docker
-README_boilerplate.md  Khung README cho dự án của đội
-```
-
-## Technical Guidebook
-
-| Chương | Nội dung | Thời gian |
-|---|---|---|
-| 1 | Lời mở đầu — mục tiêu, cách sử dụng | 15 phút |
-| 2 | Khởi tạo dự án — clone, setup, git workflow | 4 giờ |
-| 3 | Thiết kế kiến trúc — 3-tier, diagram, ADR | 6 giờ |
-| 4 | LangGraph Agent — state, node, edge, tool, RAG | 8 giờ |
-| 5 | FastAPI — routes, validation, error handling, streaming | 6 giờ |
-| 6 | Giao diện — Next.js và Streamlit | 6 giờ |
-| 7 | DevOps — Docker, CI/CD, deploy, logging | 6 giờ |
-| 8 | Kiểm thử — unit test, integration test, RAGAS | 4 giờ |
-| 9 | Demo Day — 10 deliverables, checklist | 2 giờ |
-| 10 | Tài nguyên — khoá học, tài liệu, BMAD method | tham khảo |
-
-Đọc online tại <https://phoenix.note.transformerlabs.ai/technical-book>: đăng
-nhập bằng GitHub (đúng account đã được BTC mời vào org của khoá), chọn tab
-**Technical Book** ở sidebar trái. Bản offline nằm trong `docs/guide/`, mở được
-bằng bất kỳ markdown viewer nào.
-
-## 10 deliverables cho Demo Day
-
-| # | Deliverable | Vị trí | Template lo tới đâu |
-|---|---|---|---|
-| 1 | Source code | `src/` | Khung sẵn |
-| 2 | README | copy `README_boilerplate.md` thành `README.md` | Khung sẵn |
-| 3 | Architecture diagram | `docs/architecture_diagram.md` | Khung sẵn |
-| 4 | AI logs | LangSmith (3 biến môi trường) + auto AI usage logging | Cấu hình sẵn |
-| 5 | Live URL | deploy lên Render/Vercel | CI/CD sẵn |
-| 6 | Video demo | `presentation/` | Đội tự làm |
-| 7 | Pitch deck | `presentation/` | Đội tự làm |
-| 8 | Development journal | `JOURNAL.md` | Khung sẵn |
-| 9 | Worklog | `WORKLOG.md` | Khung sẵn |
-| 10 | Evaluation evidence | `eval/` | Đội tự làm |
+X-Tutor không làm hộ, nộp bài, chấm điểm hoặc thay đổi điểm trên Canvas. Canvas
+LTI cấp trường và việc ghi dữ liệu ngược vào Canvas nằm ngoài MVP.
 
 ## Tech stack
 
-| Lớp | Công nghệ |
+| Lớp | Công nghệ hiện tại/dự kiến |
 |---|---|
-| Agent | LangGraph + LangChain 0.3 |
-| Backend | FastAPI 0.115 + Uvicorn |
-| LLM | OpenAI, mặc định `gpt-4o-mini` (đổi trong `src/config.py`) |
-| Giao diện | Next.js hoặc Streamlit (đội tự chọn, hướng dẫn ở chương 6) |
-| Lint / test | ruff + pytest 8 |
-| DevOps | Docker + GitHub Actions |
+| Backend | Python 3.11, FastAPI, Pydantic |
+| AI workflow | LangGraph, LangChain |
+| LLM | OpenAI-compatible API qua OpenRouter; model cấu hình bằng `.env` |
+| Database | SQLite cho development/MVP ban đầu |
+| Vector store | Chưa chốt; xem Known Ambiguities trong PRD |
+| Frontend | Next.js — chưa triển khai |
+| Test | pytest, pytest-asyncio, Ruff |
+| Deploy | Docker; hosting production chưa chốt |
 
-## AI usage logging
+## Quick start
 
-Mọi prompt được ghi vào `.ai-log/session.jsonl` và tự động gửi lên grading server
-ở bước pre-push.
+### Windows PowerShell
 
-| Công cụ | Cấu hình | Thời điểm ghi |
-|---|---|---|
-| Claude Code | `.claude/settings.json` | mỗi prompt (`UserPromptSubmit`) |
-| Cursor | `.cursor/hooks.json` | mỗi prompt và khi dừng |
-| OpenAI Codex CLI | `.codex/hooks.json` | mỗi prompt và khi dừng |
-| Gemini CLI | `.gemini/settings.json` | mỗi lượt agent chạy |
-| GitHub Copilot | `.github/hooks/hooks.json` | mỗi prompt và cuối session |
-| Antigravity IDE | `.agents/hooks.json` | mỗi prompt, kèm lần quét lại lúc `git push` |
+Yêu cầu: Python 3.11 và Git.
 
-Dùng ChatGPT hay công cụ web khác thì log thủ công:
+```powershell
+# 1. Clone và chuyển sang nhánh phát triển
+git clone https://github.com/AI20K-Build-Phase-Cohort-4/P-008.git
+cd P-008
+git switch develop
 
-```bash
-bash scripts/_pyrun.sh scripts/log_manual.py --tool chatgpt --prompt "What you asked"
+# 2. Tạo và kích hoạt môi trường Python
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# Nếu PowerShell chặn activate, chỉ mở quyền cho terminal hiện tại:
+# Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+# 3. Cài dependency
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+
+# 4. Tạo cấu hình local
+Copy-Item .env.example .env
+# Mở .env và điền OPENAI_API_KEY, OPENAI_BASE_URL, MODEL_NAME
+
+# 5. Chạy backend
+uvicorn src.main:app --reload --port 8000
 ```
 
-## Đóng góp
+Mở:
 
-Repo này là open source. Đọc [CONTRIBUTING.md](CONTRIBUTING.md) trước khi mở PR.
+- Swagger API: <http://127.0.0.1:8000/docs>
+- Health check: <http://127.0.0.1:8000/health>
+- Agent status: <http://127.0.0.1:8000/api/v1/status>
 
-Nội dung trong `docs/guide/` là nguồn của Technical Book và được đồng bộ lên bản
-online, nên mọi thay đổi ở đó cần review của
-[@AI20K-Build-Phase/book-maintainers](https://github.com/orgs/AI20K-Build-Phase/teams/book-maintainers)
-— xem [.github/CODEOWNERS](.github/CODEOWNERS).
+### Linux / macOS
 
-Báo lỗ hổng bảo mật theo [SECURITY.md](SECURITY.md), đừng mở public issue.
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+uvicorn src.main:app --reload --port 8000
+```
+
+Không commit `.env`, API key hoặc token Canvas lên GitHub.
+
+## Kiểm thử
+
+```powershell
+pytest
+ruff check .
+```
+
+## API hiện có
+
+| Method | Endpoint | Mô tả |
+|---|---|---|
+| `GET` | `/health` | Kiểm tra backend |
+| `GET` | `/api/v1/status` | Kiểm tra trạng thái agent |
+| `POST` | `/api/v1/chat` | Gửi tin nhắn tới LangGraph agent mẫu |
+
+Các API nghiệp vụ Plan–Do–Reflect chưa được triển khai. Phạm vi dự kiến được
+quản lý trong PRD, không được xem là tính năng đã hoàn thành.
+
+## Tài liệu Gate 01
+
+- [Project Brief](docs/01-brief.md)
+- [Product Requirements Document](docs/02-prd.md)
+- [Wireframe & UI Flow](docs/03-wireframe-uiflow.md)
+- [Architecture Diagram](docs/architecture_diagram.md)
+
+## Cấu trúc repository
+
+```text
+src/
+├── agents/       # LangGraph state, nodes, graph và tools
+├── api/          # FastAPI routes
+├── models/       # Pydantic request/response schemas
+├── services/     # LLM và business services
+├── config.py     # Settings từ .env
+└── main.py       # FastAPI entry point
+tests/            # Unit/integration tests
+docs/             # Brief, PRD, wireframe và tài liệu kỹ thuật
+eval/             # Evaluation evidence
+presentation/     # Pitch deck và video demo
+```
+
+## Thành viên và vai trò
+
+Tên thật của thành viên chưa được lưu trong repository; bảng dưới sử dụng mã nội
+bộ để không bịa dữ liệu cá nhân. Đội chỉ cần thay cột **Thành viên** trước khi
+nộp danh sách chính thức.
+
+| Thành viên | Vai trò | Trách nhiệm chính |
+|---|---|---|
+| P-008-01 | **Tech Lead** | Kiến trúc, backend, code review, CI/CD và tích hợp các module |
+| P-008-02 | **AI Engineer** | LangGraph, RAG, prompt/guardrail và evaluation |
+| P-008-03 | **Product Owner (PO)** | Tầm nhìn sản phẩm, ưu tiên backlog, phạm vi MVP và nghiệm thu |
+| P-008-04 | **Business Analyst (BA)** | Nghiên cứu pain point, user stories, PRD, UI flow và tiêu chí chấp nhận |
+
+## Quy trình nhánh
+
+- `main`: phiên bản ổn định.
+- `develop`: nhánh tích hợp trong quá trình phát triển.
+- Nhánh tính năng: `feature/<ten-tinh-nang>`, tạo pull request vào `develop`.
 
 ## License
 
-[MIT](LICENSE) — dùng tự do cho mục đích giáo dục.
+[MIT](LICENSE)
