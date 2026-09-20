@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
 import pytest
@@ -15,8 +16,8 @@ async def client():
         yield ac
 
 
-@pytest.fixture
-def mock_llm():
+@pytest.fixture(autouse=True)
+def mock_llm(monkeypatch):
     """Mock LLM to avoid calling OpenAI during tests.
 
     Usage in test:
@@ -25,5 +26,6 @@ def mock_llm():
             ...
     """
     mock = AsyncMock()
-    mock.ainvoke.return_value = AsyncMock(content="Mocked LLM response")
+    mock.ainvoke.return_value = SimpleNamespace(content="Mocked LLM response")
+    monkeypatch.setattr("src.agents.nodes.example_node.get_llm", lambda: mock)
     return mock

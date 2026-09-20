@@ -1,26 +1,33 @@
 from src.agents.state import AgentState
+from src.services.llm import get_llm
 
 
 async def analyze_node(state: AgentState) -> dict:
     """Phân tích query từ user."""
-    query = state.get("query", "")
+    query = state.get("query", "").strip()
+    if not query:
+        return {"error": "Query không được để trống."}
 
-    # TODO: Thêm logic phân tích thực tế
-    # Ví dụ: gọi LLM, search vector DB, etc.
-    analysis = f"Phân tích: {query}"
-
-    return {"analysis": analysis}
+    return {"analysis": "Đã kiểm tra và chuẩn bị yêu cầu cho mô hình."}
 
 
 async def respond_node(state: AgentState) -> dict:
-    """Tạo response từ analysis."""
-    analysis = state.get("analysis", "")
+    """Gọi LLM qua OpenRouter và tạo phản hồi."""
+    query = state.get("query", "")
     error = state.get("error")
 
     if error:
         return {"response": f"Lỗi: {error}"}
 
-    # TODO: Thêm logic tạo response thực tế
-    response = f"Kết quả dựa trên phân tích: {analysis}"
+    llm = get_llm()
+    result = await llm.ainvoke(
+        [
+            (
+                "system",
+                "Bạn là trợ lý AI hữu ích. Trả lời chính xác, rõ ràng và ưu tiên tiếng Việt khi người dùng hỏi bằng tiếng Việt.",
+            ),
+            ("human", query),
+        ]
+    )
 
-    return {"response": response}
+    return {"response": str(result.content)}
