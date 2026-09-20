@@ -14,7 +14,15 @@ bash scripts/_pyrun.sh scripts/submit_log.py || true
 exit 0
 '@
 
-Set-Content -Path $HookFile -Value $HookBody -Encoding UTF8 -NoNewline
+# Git executes hooks through its POSIX compatibility layer. The shebang must
+# be the very first bytes in the file, so write UTF-8 without BOM and use LF
+# line endings even when this installer runs in Windows PowerShell 5.1.
+$HookBody = $HookBody.Replace("`r`n", "`n")
+[System.IO.File]::WriteAllText(
+    (Join-Path (Get-Location) $HookFile),
+    $HookBody,
+    [System.Text.UTF8Encoding]::new($false)
+)
 Write-Host "[ai-log] Git pre-push hook installed."
 
 if (-not (Test-Path .ai-log)) { New-Item -ItemType Directory -Path .ai-log | Out-Null }
